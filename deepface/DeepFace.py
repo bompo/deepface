@@ -70,7 +70,7 @@ def featureExtraction(img1_path, model_name ='VGG-Face', model = None, enforce_d
 		instance = img_list[index]
 		
 		if type(instance) == list:
-			img1_path = instance[0]
+			img1_path = instance
 
 			#----------------------
 			#crop and align faces
