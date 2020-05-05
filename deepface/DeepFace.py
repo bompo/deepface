@@ -20,8 +20,7 @@ from deepface.basemodels import VGGFace, OpenFace, Facenet, FbDeepFace
 from deepface.extendedmodels import Age, Gender, Race, Emotion
 from deepface.commons import functions, realtime, distance as dst
 
-def featureExtraction(img1_path
-	, model_name ='VGG-Face', model = None, enforce_detection = True):
+def featureExtraction(img1_path, model_name ='VGG-Face', model = None, enforce_detection = True):
 
 	tic = time.time()
 
@@ -82,6 +81,8 @@ def featureExtraction(img1_path
 			#find embeddings
 
 			img1_representation = model.predict(img1)[0,:]
+
+			print(img1_representation)
 
 			#----------------------
 			#response object
