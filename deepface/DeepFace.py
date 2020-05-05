@@ -89,7 +89,6 @@ def featureExtraction(img1_path
 			resp_obj = "{"
 			resp_obj += ", \"feature\": "+str(img1_representation)
 			resp_obj += ", \"model\": \""+model_name+"\""
-			resp_obj += ", \"similarity_metric\": \""+distance_metric+"\""
 			resp_obj += "}"
 
 			resp_obj = json.loads(resp_obj) #string to json
