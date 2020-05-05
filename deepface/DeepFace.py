@@ -20,6 +20,112 @@ from deepface.basemodels import VGGFace, OpenFace, Facenet, FbDeepFace
 from deepface.extendedmodels import Age, Gender, Race, Emotion
 from deepface.commons import functions, realtime, distance as dst
 
+def featureExtraction(img1_path
+	, model_name ='VGG-Face', model = None, enforce_detection = True):
+
+	tic = time.time()
+
+	if type(img1_path) == list:
+		bulkProcess = True
+		img_list = img1_path.copy()
+	else:
+		bulkProcess = False
+		img_list = [img1_path]
+
+	#------------------------------
+
+	if model == None:
+		if model_name == 'VGG-Face':
+			print("Using VGG-Face model backend.")
+			model = VGGFace.loadModel()
+
+		elif model_name == 'OpenFace':
+			print("Using OpenFace model backend.")
+			model = OpenFace.loadModel()
+
+		elif model_name == 'Facenet':
+			print("Using Facenet model backend.")
+			model = Facenet.loadModel()
+
+		elif model_name == 'DeepFace':
+			print("Using FB DeepFace model backend.")
+			model = FbDeepFace.loadModel()
+
+		else:
+			raise ValueError("Invalid model_name passed - ", model_name)
+	else: #model != None
+		print("Already built model is passed")
+
+	#------------------------------
+	#face recognition models have different size of inputs
+	input_shape = model.layers[0].input_shape[1:3]
+
+	#------------------------------
+	pbar = tqdm(range(0,len(img_list)), desc='Feature Extraction')
+	
+	resp_objects = []
+	
+	#for instance in img_list:
+	for index in pbar:
+	
+		instance = img_list[index]
+		
+		if type(instance) == list:
+			img1_path = instance[0]
+
+			#----------------------
+			#crop and align faces
+
+			img1 = functions.detectFace(img1_path, input_shape, enforce_detection = enforce_detection)
+
+			#----------------------
+			#find embeddings
+
+			img1_representation = model.predict(img1)[0,:]
+
+			#----------------------
+			#response object
+
+			resp_obj = "{"
+			resp_obj += ", \"feature\": "+str(img1_representation)
+			resp_obj += ", \"model\": \""+model_name+"\""
+			resp_obj += ", \"similarity_metric\": \""+distance_metric+"\""
+			resp_obj += "}"
+
+			resp_obj = json.loads(resp_obj) #string to json
+
+			if bulkProcess == True:
+				resp_objects.append(resp_obj)
+			else:
+				#K.clear_session()
+				return resp_obj
+			#----------------------
+
+		else:
+			raise ValueError("Invalid arguments passed to verify function: ", instance)
+
+	#-------------------------
+
+	toc = time.time()
+
+	#print("identification lasts ",toc-tic," seconds")
+
+	if bulkProcess == True:
+		resp_obj = "{"
+
+		for i in range(0, len(resp_objects)):
+			resp_item = json.dumps(resp_objects[i])
+
+			if i > 0:
+				resp_obj += ", "
+
+			resp_obj += "\"feature_"+str(i+1)+"\": "+resp_item
+		resp_obj += "}"
+		resp_obj = json.loads(resp_obj)
+		return resp_obj
+		#return resp_objects
+
+
 def verify(img1_path, img2_path=''
 	, model_name ='VGG-Face', distance_metric = 'cosine', model = None, enforce_detection = True):
 
