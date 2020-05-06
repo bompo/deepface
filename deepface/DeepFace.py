@@ -72,10 +72,14 @@ def featureExtraction(img1_path, model_name ='VGG-Face', model = None, enforce_d
 		if type(instance) == list:
 			img1_path = instance
 
+			print(img1_path)
+
 			#----------------------
 			#crop and align faces
 
 			img1 = functions.detectFace(img1_path, input_shape, enforce_detection = enforce_detection)
+
+			print(img1)
 
 			#----------------------
 			#find embeddings
