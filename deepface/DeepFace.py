@@ -29,7 +29,7 @@ def featureExtraction(img1_path, model_name ='VGG-Face', model = None, enforce_d
 		img_list = img1_path.copy()
 	else:
 		bulkProcess = False
-		img_list = [img1_path]
+		img_list = [[img1_path]]
 
 	#------------------------------
 
@@ -70,7 +70,7 @@ def featureExtraction(img1_path, model_name ='VGG-Face', model = None, enforce_d
 		instance = img_list[index]
 		
 		if type(instance) == list:
-			img1_path = instance
+			img1_path = instance[0]
 
 			print(img1_path)
 
