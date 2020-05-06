@@ -11,6 +11,8 @@ import cv2
 from keras import backend as K
 import keras
 import tensorflow as tf
+from json import JSONEncoder
+import json
 
 #from basemodels import VGGFace, OpenFace, Facenet, FbDeepFace
 #from extendedmodels import Age, Gender, Race, Emotion
@@ -72,27 +74,21 @@ def featureExtraction(img1_path, model_name ='VGG-Face', model = None, enforce_d
 		if type(instance) == list:
 			img1_path = instance[0]
 
-			print(img1_path)
-
 			#----------------------
 			#crop and align faces
 
 			img1 = functions.detectFace(img1_path, input_shape, enforce_detection = enforce_detection)
-
-			print(img1)
 
 			#----------------------
 			#find embeddings
 
 			img1_representation = model.predict(img1)[0,:]
 
-			print(img1_representation)
-
 			#----------------------
 			#response object
 
 			resp_obj = "{"
-			resp_obj += ", \"feature\": "+str(img1_representation)
+			resp_obj += ", \"feature\":" + json.dumps(img1_representation, cls=NumpyArrayEncoder)
 			resp_obj += ", \"model\": \""+model_name+"\""
 			resp_obj += "}"
 
