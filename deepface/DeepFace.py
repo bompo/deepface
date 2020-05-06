@@ -86,9 +86,9 @@ def featureExtraction(img1_path, model_name ='VGG-Face', model = None, enforce_d
 
 			#----------------------
 			#response object
-			
+
 			resp_obj = "{"
-			resp_obj += ", \"feature\":" + json.dump(img1_representation.tolist(), separators=(',', ':'))
+			resp_obj += ", \"feature\":" + img1_representation.tolist()
 			resp_obj += ", \"model\": \""+model_name+"\""
 			resp_obj += "}"
 
